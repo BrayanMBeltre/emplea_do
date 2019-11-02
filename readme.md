@@ -48,3 +48,9 @@ The `init.sh` does this automatically.
 ## If you have any questions or just want to hang out ##
 
 - We have a [slack channel](https://empleado-slack.azurewebsites.net)
+
+## Build Status ##
+
+[Beta Server](beta.emplea.do)
+
+[![Build Status](https://dev.azure.com/megsoft/EmpleaDo%20Build%20System/_apis/build/status/Emplea.do%20Net%20Core%20-%20CI%20Build%20(Development)?branchName=development)](https://dev.azure.com/megsoft/EmpleaDo%20Build%20System/_build/latest?definitionId=23&branchName=development)

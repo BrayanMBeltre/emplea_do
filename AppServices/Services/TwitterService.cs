@@ -6,17 +6,17 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Configuration;
 using Microsoft.Extensions.Options;
-/// <summary>
-/// Simple class for sending tweets to Twitter using Single-user OAuth.
-/// https://dev.twitter.com/oauth/overview/single-user
-/// 
-/// Get your access keys by creating an app at apps.twitter.com then visiting the
-/// "Keys and Access Tokens" section for your app. They can be found under the
-/// "Your Access Token" heading.
-/// </summary>
 
 namespace AppServices.Services
 {
+    /// <summary>
+    /// Simple class for sending tweets to Twitter using Single-user OAuth.
+    /// https://dev.twitter.com/oauth/overview/single-user
+    /// 
+    /// Get your access keys by creating an app at apps.twitter.com then visiting the
+    /// "Keys and Access Tokens" section for your app. They can be found under the
+    /// "Your Access Token" heading.
+    /// </summary>
     public class TwitterService : ITwitterService
     {
         const string TwitterApiBaseUrl = "https://api.twitter.com/1.1/";
@@ -34,13 +34,14 @@ namespace AppServices.Services
         /// </summary>
         public TwitterService(IOptions<TwitterConfig> app)
         {
-            validateConfig(app);
-            this.consumerKey = app.Value.consumerKey;
-            this.consumerKeySecret = app.Value.consumerKeySecret;
-            this.accessToken = app.Value.accessToken;
-            this.accessTokenSecret = app.Value.accessTokenSecret;
-
-            sigHasher = new HMACSHA1(new System.Text.ASCIIEncoding().GetBytes(string.Format("{0}&{1}", consumerKeySecret, accessTokenSecret)));
+            if (IsConfigValid(app))
+            { 
+                this.consumerKey = app.Value.ConsumerKey;
+                this.consumerKeySecret = app.Value.ConsumerKeySecret;
+                this.accessToken = app.Value.AccessToken;
+                this.accessTokenSecret = app.Value.AccessTokenSecret;
+                sigHasher = new HMACSHA1(new System.Text.ASCIIEncoding().GetBytes(string.Format("{0}&{1}", consumerKeySecret, accessTokenSecret)));
+            }
         }
 
         /// <summary>
@@ -136,10 +137,9 @@ namespace AppServices.Services
             }
         }
 
-        void validateConfig(IOptions<TwitterConfig> app)
+        bool IsConfigValid(IOptions<TwitterConfig> app)
         {
-            if(String.IsNullOrEmpty(app.Value.consumerKey)||String.IsNullOrEmpty(app.Value.consumerKeySecret) || String.IsNullOrEmpty(app.Value.accessToken) || String.IsNullOrEmpty(app.Value.accessTokenSecret)) 
-                throw new ArgumentException("Twitter configuration setting are required");
+            return !((String.IsNullOrEmpty(app.Value.ConsumerKey)||String.IsNullOrEmpty(app.Value.ConsumerKeySecret) || String.IsNullOrEmpty(app.Value.AccessToken) || String.IsNullOrEmpty(app.Value.AccessTokenSecret)));
         }
     }
     public interface ITwitterService
@@ -149,10 +149,9 @@ namespace AppServices.Services
     }
     public class TwitterConfig
     {
-        public string consumerKey { get; set; }
-        public string consumerKeySecret { get; set; }
-        public string accessToken { get; set; }
-        public string accessTokenSecret { get; set; }
-
+        public string ConsumerKey { get; set; }
+        public string ConsumerKeySecret { get; set; }
+        public string AccessToken { get; set; }
+        public string AccessTokenSecret { get; set; }
     }
 }
