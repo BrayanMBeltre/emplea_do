@@ -35,7 +35,19 @@ namespace Web.Controllers
             return View(viewModel);
         }
 
-       [Authorize]
+        public IActionResult New()
+        {
+            var model = new WizardViewModel
+            {
+                Categories = _categoriesService.GetAll(),
+                JobTypes = _hiretypesService.GetAll()
+            };
+
+            return View(model);
+        }
+
+
+        [Authorize]
         public IActionResult Wizard()
         {
             var model = new WizardViewModel
@@ -47,14 +59,16 @@ namespace Web.Controllers
             return View(model);
         }
 
+
+
         [Authorize]
         [HttpPost]
         public IActionResult Wizard(WizardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var url = $"{this.Request.Scheme}://{this.Request.Host}/";
-                System.Threading.Tasks.Task.Run(()=>_twitterService.Tweet($"Se busca: {model.Title} para mas información, dirigirse a emplea.do {url} "));
+                //var url = $"{this.Request.Scheme}://{this.Request.Host}/";
+                //System.Threading.Tasks.Task.Run(()=>_twitterService.Tweet($"Se busca: {model.Title} para mas información, dirigirse a emplea.do {url} "));
 
                 return RedirectToAction("", "");
             }
